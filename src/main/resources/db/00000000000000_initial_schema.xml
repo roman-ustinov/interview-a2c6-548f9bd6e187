@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1" author="author">
+        <createSequence sequenceName="breed_seq" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="2" author="author">
+        <createSequence sequenceName="animal_seq" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="3" author="author">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="breed" schemaName="animals_schema"/>
+            </not>
+        </preConditions>
+        <createTable tableName="breed">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="author">
+        <insert tableName="breed">
+            <column name="id" valueSequenceNext="breed_seq"/>
+            <column name="name" value="Afganský chrt"/>
+        </insert>
+        <insert tableName="breed">
+            <column name="id" valueSequenceNext="breed_seq"/>
+            <column name="name" value="Americká akita"/>
+        </insert>
+        <insert tableName="breed">
+            <column name="id" valueSequenceNext="breed_seq"/>
+            <column name="name" value="Anglický buldog"/>
+        </insert>
+        <insert tableName="breed">
+            <column name="id" valueSequenceNext="breed_seq"/>
+            <column name="name" value="Belgický ovčiak"/>
+        </insert>
+        <insert tableName="breed">
+            <column name="id" valueSequenceNext="breed_seq"/>
+            <column name="name" value="Bradáč"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="5" author="author">
+        <createTable tableName="animal">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="age" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="gender" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="breed_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6" author="author">
+        <addForeignKeyConstraint
+                baseTableName="animal"
+                baseTableSchemaName="animals_schema"
+                baseColumnNames="breed_id"
+                referencedTableName="breed"
+                referencedTableSchemaName="animals_schema"
+                referencedColumnNames="id" constraintName="fk_animal_breed"/>
+    </changeSet>
+</databaseChangeLog>
